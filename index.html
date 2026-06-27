@@ -1,0 +1,480 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ใครทำอะไร — ทีม RIASEC Career Site</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Kanit:wght@500;600;700&family=Sarabun:wght@400;500;600;700&family=Mali:wght@500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --paper:#EEF1F4;
+    --dot: rgba(43,76,126,0.10);
+    --surface:#FFFFFF;
+    --ink:#1B2A41;
+    --ink-soft:#54637C;
+    --ink-faint:#90A0B7;
+    --pen:#2B4C7E;
+    --pen-dark:#1F3A61;
+    --red:#C0392B;
+    --line:#D7DEE6;
+    --r:#6B8F71; --i:#2B4C7E; --a:#A8569E; --s:#D88A3F; --e:#C0392B; --c:#4F8A8B;
+    --radius:20px;
+    --shadow: 0 1px 2px rgba(27,42,65,.05), 0 14px 30px -14px rgba(27,42,65,.18);
+    --font-d:'Kanit',sans-serif;
+    --font-b:'Sarabun',sans-serif;
+    --font-h:'Mali',cursive;
+  }
+  *{box-sizing:border-box;}
+  html{scroll-behavior:smooth;}
+  body{
+    margin:0;
+    font-family:var(--font-b);
+    background:var(--paper);
+    background-image: radial-gradient(var(--dot) 1px, transparent 1px);
+    background-size: 24px 24px;
+    color:var(--ink);
+    -webkit-font-smoothing:antialiased;
+  }
+  :focus-visible{ outline:2px solid var(--pen); outline-offset:3px; border-radius:6px; }
+  .wrap{max-width:1080px;margin:0 auto;padding:0 22px;}
+  h1,h2,h3{font-family:var(--font-d); margin:0; color:var(--ink);}
+  p{margin:0;}
+
+  /* ---------- topbar ---------- */
+  .topbar{position:sticky;top:0;z-index:60;background:rgba(238,241,244,.86);backdrop-filter:blur(10px);border-bottom:1px solid var(--line);}
+  .topbar-inner{max-width:1080px;margin:0 auto;padding:14px 22px;display:flex;align-items:center;justify-content:space-between;gap:12px;}
+  .brand{display:flex;align-items:center;gap:10px;}
+  .brand-mark{width:32px;height:32px;border-radius:50%;background:var(--pen);color:#fff;display:grid;place-items:center;font-family:var(--font-d);font-weight:700;font-size:.95rem;flex-shrink:0;}
+  .brand-text strong{display:block;font-family:var(--font-d);font-weight:700;font-size:1rem;line-height:1.2;}
+  .brand-text span{display:block;font-family:var(--font-h);color:var(--ink-soft);font-size:.82rem;}
+  .view-toggle{display:flex;background:var(--surface);border:1px solid var(--line);border-radius:999px;padding:3px;gap:2px;}
+  .view-toggle button{border:none;background:none;font-family:var(--font-b);font-weight:600;font-size:.82rem;padding:7px 13px;border-radius:999px;cursor:pointer;color:var(--ink-soft);transition:background .15s,color .15s;white-space:nowrap;}
+  .view-toggle button.active{background:var(--pen);color:#fff;}
+
+  /* ---------- hero ---------- */
+  .hero{padding:38px 0 18px;}
+  .hero-grid{display:grid;grid-template-columns:1.1fr 1fr;gap:30px;align-items:center;}
+  .hero h1{font-size:clamp(1.7rem,4vw,2.5rem);font-weight:700;line-height:1.25;}
+  .hero h1 em{font-style:normal;color:var(--pen);}
+  .hero p.lead{margin-top:12px;color:var(--ink-soft);font-size:1.02rem;line-height:1.7;max-width:46ch;}
+  .sticky-note{display:inline-block;margin-top:16px;font-family:var(--font-h);font-size:.95rem;color:var(--red);background:#fff;border:1px dashed var(--red);padding:6px 14px;border-radius:12px;transform:rotate(-1.2deg);}
+  .stats{display:flex;flex-wrap:wrap;gap:8px;margin-top:20px;}
+  .stat-chip{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:7px 12px;font-size:.82rem;color:var(--ink-soft);}
+  .stat-chip b{color:var(--ink);font-family:var(--font-d);}
+
+  .hexwrap{display:flex;justify-content:center;}
+  .hexwrap svg{width:100%;max-width:300px;height:auto;}
+  .hex-label{font-family:var(--font-d);font-weight:600;font-size:14px;fill:var(--ink-soft);}
+  .hex-label-sub{font-family:var(--font-b);font-size:8.5px;fill:var(--ink-faint);}
+
+  /* ---------- squiggle divider ---------- */
+  .squiggle{display:block;width:100%;height:26px;margin:6px 0 2px;}
+  .squiggle path{fill:none;stroke:var(--line);stroke-width:2;}
+
+  /* ---------- team switcher ---------- */
+  .switcher-label{font-family:var(--font-h);color:var(--ink-soft);font-size:.95rem;margin:18px 0 10px;}
+  .switcher{display:flex;gap:10px;overflow-x:auto;padding:4px 2px 14px;scroll-snap-type:x proximity;}
+  .switcher::-webkit-scrollbar{height:6px;}
+  .switcher::-webkit-scrollbar-thumb{background:var(--line);border-radius:6px;}
+  .p-card{flex:0 0 auto;scroll-snap-align:start;width:178px;background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);padding:14px;cursor:pointer;text-align:left;transition:transform .15s,box-shadow .15s,border-color .15s;}
+  .p-card:hover{transform:translateY(-2px);box-shadow:var(--shadow);}
+  .p-card.active{border-color:var(--accent);box-shadow:var(--shadow);}
+  .p-card .avatar{width:38px;height:38px;border-radius:50%;background:var(--accent);color:#fff;display:grid;place-items:center;font-family:var(--font-d);font-weight:700;font-size:1rem;margin-bottom:10px;}
+  .p-card .pname{font-family:var(--font-d);font-weight:600;font-size:.92rem;display:block;border-bottom:1px dashed transparent;outline:none;}
+  .p-card .pname[contenteditable="true"]:hover{border-color:var(--ink-faint);}
+  .p-card .prole{font-size:.76rem;color:var(--ink-soft);margin-top:3px;display:block;line-height:1.4;}
+  .tagrow{display:flex;gap:5px;margin-top:9px;}
+  .tag{width:20px;height:20px;border-radius:6px;display:grid;place-items:center;font-size:.66rem;font-weight:700;color:#fff;font-family:var(--font-d);}
+
+  /* ---------- panel ---------- */
+  .panel{display:none;animation:fade .25s ease;}
+  .panel.show{display:block;}
+  @keyframes fade{from{opacity:0;transform:translateY(4px);}to{opacity:1;transform:translateY(0);}}
+  .panel-head{background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);padding:22px 24px;display:grid;grid-template-columns:1fr auto;gap:16px;align-items:center;margin-bottom:18px;border-left:5px solid var(--accent);}
+  .panel-head h2{font-size:1.4rem;}
+  .panel-head .blurb{color:var(--ink-soft);margin-top:6px;font-size:.94rem;line-height:1.6;max-width:60ch;}
+  .progress-box{text-align:right;min-width:120px;}
+  .progress-num{font-family:var(--font-d);font-size:1.5rem;color:var(--accent);font-weight:700;}
+  .progress-track{width:120px;height:6px;border-radius:6px;background:var(--paper);margin-top:6px;overflow:hidden;}
+  .progress-fill{height:100%;background:var(--accent);width:0%;transition:width .25s;}
+
+  .cols{display:grid;grid-template-columns:230px 1fr;gap:18px;}
+  .needs-box{background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);padding:18px;align-self:start;}
+  .needs-box h3{font-size:.92rem;text-transform:uppercase;letter-spacing:.04em;color:var(--ink-soft);font-family:var(--font-b);font-weight:700;}
+  .needs-box ul{margin:12px 0 0;padding:0;list-style:none;display:flex;flex-direction:column;gap:9px;}
+  .needs-box li{font-size:.86rem;line-height:1.5;padding-left:18px;position:relative;}
+  .needs-box li::before{content:"";position:absolute;left:0;top:6px;width:7px;height:7px;border-radius:2px;background:var(--accent);transform:rotate(45deg);}
+  .deliver{margin-top:16px;padding-top:14px;border-top:1px dashed var(--line);}
+  .deliver h3{font-size:.92rem;text-transform:uppercase;letter-spacing:.04em;color:var(--ink-soft);font-weight:700;}
+  .deliver p{margin-top:8px;font-size:.86rem;line-height:1.5;color:var(--ink);}
+
+  .weeks{display:flex;flex-direction:column;gap:12px;}
+  .week-card{background:var(--surface);border:1px solid var(--line);border-radius:18px;padding:16px 18px;position:relative;}
+  .week-head{display:flex;align-items:baseline;gap:10px;margin-bottom:10px;}
+  .week-num{font-family:var(--font-d);font-weight:700;color:#fff;background:var(--accent);width:26px;height:26px;border-radius:50%;display:grid;place-items:center;font-size:.78rem;flex-shrink:0;}
+  .week-head h4{font-family:var(--font-d);font-size:.98rem;font-weight:600;}
+  .week-card ul{margin:0;padding:0;list-style:none;display:flex;flex-direction:column;gap:7px;}
+  .week-card li{display:flex;align-items:flex-start;gap:9px;font-size:.9rem;line-height:1.55;cursor:pointer;}
+  .check{flex-shrink:0;width:18px;height:18px;border:2px solid var(--ink-faint);border-radius:6px;margin-top:2px;display:grid;place-items:center;transition:background .15s,border-color .15s;}
+  .check svg{width:10px;height:10px;opacity:0;transition:opacity .12s;}
+  li.done .check{background:var(--accent);border-color:var(--accent);}
+  li.done .check svg{opacity:1;}
+  li.done span.ttext{color:var(--ink-faint);text-decoration:line-through;}
+
+  .note-caption{font-family:var(--font-h);color:var(--ink-faint);font-size:.82rem;margin:16px 2px 0;}
+
+  /* ---------- overview ---------- */
+  #overview{display:none;}
+  #overview.show{display:block;}
+  .ov-week{background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);padding:18px 20px;margin-bottom:14px;}
+  .ov-week h3{font-family:var(--font-d);font-size:1.02rem;display:flex;align-items:center;gap:10px;}
+  .ov-week h3 .week-num{width:24px;height:24px;font-size:.74rem;background:var(--pen);}
+  .ov-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:14px;margin-top:14px;}
+  .ov-cell{border-left:3px solid var(--accent);padding-left:10px;}
+  .ov-cell .ov-name{font-family:var(--font-d);font-weight:600;font-size:.82rem;margin-bottom:5px;display:block;}
+  .ov-cell ul{margin:0;padding:0;list-style:none;display:flex;flex-direction:column;gap:5px;}
+  .ov-cell li{font-size:.78rem;color:var(--ink-soft);line-height:1.5;}
+
+  footer{margin:40px 0 28px;text-align:center;color:var(--ink-faint);font-size:.82rem;}
+
+  /* ---------- responsive ---------- */
+  @media (max-width:920px){
+    .hero-grid{grid-template-columns:1fr;}
+    .hexwrap{order:-1;max-width:220px;margin:0 auto 6px;}
+    .cols{grid-template-columns:1fr;}
+    .ov-grid{grid-template-columns:repeat(2,1fr);}
+  }
+  @media (max-width:600px){
+    .panel-head{grid-template-columns:1fr;}
+    .progress-box{text-align:left;}
+    .progress-track{width:100%;}
+    .ov-grid{grid-template-columns:1fr;}
+    .brand-text span{display:none;}
+  }
+  @media (prefers-reduced-motion: reduce){
+    *{animation:none !important;transition:none !important;scroll-behavior:auto !important;}
+  }
+</style>
+</head>
+<body>
+
+<div class="topbar">
+  <div class="topbar-inner">
+    <div class="brand">
+      <div class="brand-mark">RC</div>
+      <div class="brand-text">
+        <strong>ใครทำอะไร</strong>
+        <span>โครงงาน RIASEC Career Site</span>
+      </div>
+    </div>
+    <div class="view-toggle" role="tablist" aria-label="สลับมุมมอง">
+      <button id="btn-person" class="active" role="tab" aria-selected="true">มุมมองรายคน</button>
+      <button id="btn-overview" role="tab" aria-selected="false">มุมมองรวมทั้งทีม</button>
+    </div>
+  </div>
+</div>
+
+<div class="wrap">
+
+  <section class="hero">
+    <div class="hero-grid">
+      <div>
+        <h1>หน้าที่ของ <em>5 คน</em><br>ในหนึ่งโครงงาน</h1>
+        <p class="lead">รวมภารกิจของแต่ละคนในทีมไว้ที่เดียว แตะชื่อตัวเองด้านล่างเพื่อดูว่าต้องทำอะไรในแต่ละสัปดาห์ ตั้งแต่เริ่มรีเสิร์ชจนถึงวันนำเสนอ</p>
+        <span class="sticky-note">อัปเดตล่าสุด: ทีมงาน 5 คน · ระยะเวลา 6 สัปดาห์</span>
+        <div class="stats">
+          <div class="stat-chip"><b>5</b> คนในทีม</div>
+          <div class="stat-chip"><b>6</b> สัปดาห์</div>
+          <div class="stat-chip"><b>30+</b> อาชีพที่ต้องรีเสิร์ช</div>
+          <div class="stat-chip"><b>20+</b> สายการเรียน</div>
+          <div class="stat-chip"><b>30+</b> คน กลุ่มทดสอบ</div>
+        </div>
+      </div>
+      <div class="hexwrap">
+        <svg viewBox="0 0 300 300" id="hexsvg">
+          <polygon points="150,40 245,95 245,205 150,260 55,205 55,95" fill="none" stroke="var(--line)" stroke-width="2"/>
+          <path id="connector" d="" fill="none" stroke="var(--pen)" stroke-width="2.4" stroke-linecap="round" opacity="0"/>
+          <g id="nodes"></g>
+        </svg>
+      </div>
+    </div>
+    <svg class="squiggle" viewBox="0 0 1000 26" preserveAspectRatio="none">
+      <path d="M0,13 C60,2 90,24 150,13 S240,2 300,13 370,24 430,13 520,2 580,13 650,24 710,13 800,2 860,13 930,24 1000,13"/>
+    </svg>
+  </section>
+
+  <div id="person-view">
+    <p class="switcher-label">แตะชื่อของตัวเองในทีม 👇 (กดที่ชื่อค้างไว้เพื่อแก้เป็นชื่อจริง)</p>
+    <div class="switcher" id="switcher"></div>
+    <div id="panels"></div>
+    <p class="note-caption">เครื่องหมายถูกในรายการงานใช้สำหรับติ๊กระหว่างประชุมทีมเท่านั้น — จะรีเซ็ตเมื่อโหลดหน้าใหม่</p>
+  </div>
+
+  <div id="overview">
+    <p class="switcher-label">ภาพรวมงานทั้งทีม แยกตามสัปดาห์</p>
+    <div id="overview-body"></div>
+  </div>
+
+  <footer>ทำขึ้นเพื่อใช้ภายในทีมโครงงาน RIASEC Career Site · แก้ไขเนื้อหาได้ตามจริงของทีม</footer>
+</div>
+
+<script>
+const WEEKS = [
+  "สำรวจและวางแผนพื้นฐาน",
+  "ลงมือสร้างเนื้อหาและโครงหลัก",
+  "พัฒนาให้ใช้งานได้จริง",
+  "เชื่อมระบบและทำหน้าผลลัพธ์",
+  "ทดสอบกับผู้ใช้จริงและปรับปรุง",
+  "สรุปและส่งมอบงาน"
+];
+
+const TEAM = [
+  {
+    id:"c1", name:"สมาชิกคนที่ 1", role:"Frontend & UI/UX",
+    tags:["A","I"], accent:"var(--a)",
+    blurb:"แปลงดีไซน์ให้เป็นหน้าเว็บจริง ดูแลความสวยงามและความใช้งานง่ายของทุกหน้า",
+    needs:["CSS Layout และ Responsive Design","การอ่านดีไซน์จาก Figma","Chart.js หรือ Recharts สำหรับวาดกราฟผลลัพธ์","หลักการ Accessibility เบื้องต้น"],
+    weeks:[
+      ["ศึกษาเว็บแบบทดสอบบุคลิกภาพอื่น ๆ เป็นไอเดีย","ร่าง wireframe หน้าแรกและหน้าแบบทดสอบ"],
+      ["เขียน HTML/CSS โครงหน้าแรกและหน้าแบบทดสอบ"],
+      ["ทำหน้าแบบทดสอบให้กรอกคำตอบและเก็บค่าได้จริง","ปรับ Responsive ให้ใช้ได้ทุกขนาดจอ"],
+      ["สร้างหน้าแสดงผล Holland Code พร้อมกราฟเรดาร์ 6 มิติ"],
+      ["แก้ UI/UX ตามที่กลุ่มทดสอบติชมมา"],
+      ["ขัดดีเทลสุดท้ายทุกหน้า และทดสอบก่อนเปิดใช้จริง"]
+    ],
+    deliver:"หน้าเว็บทุกหน้าที่ใช้งานได้จริง และตอบสนองทุกขนาดจอ"
+  },
+  {
+    id:"c2", name:"สมาชิกคนที่ 2", role:"Logic, Data & Deploy",
+    tags:["I","C"], accent:"var(--i)",
+    blurb:"ออกแบบวิธีคำนวณ RIASEC ฐานข้อมูลอาชีพ/สายเรียน และดูแลการนำเว็บขึ้นจริง",
+    needs:["JavaScript และการออกแบบโครงสร้างข้อมูล","Git และ GitHub","ทฤษฎี Holland RIASEC แบบละเอียด (เพื่อให้ logic ถูกต้อง)","พื้นฐานการ Deploy เว็บไซต์ (Vercel / GitHub Pages)"],
+    weeks:[
+      ["ออกแบบโครงสร้างข้อมูล JSON ของคำถามและฐานข้อมูลอาชีพ","ตั้ง GitHub repo ของทีม"],
+      ["ลงคำถามแบบทดสอบลงในโครงสร้างข้อมูล","เริ่มเขียนฟังก์ชันคำนวณคะแนน RIASEC"],
+      ["ทำฟังก์ชันหา Holland Code จากคะแนนให้เสร็จ"],
+      ["จับคู่ Holland Code กับฐานข้อมูลอาชีพ/สายเรียน","เชื่อมทุกส่วนของเว็บเข้าด้วยกัน"],
+      ["ไล่แก้บั๊ก logic ตามผลทดสอบจริง","เตรียม deploy ขึ้นเว็บจริง"],
+      ["Deploy เวอร์ชันสมบูรณ์","ทดสอบการทำงานรอบสุดท้ายทุกอุปกรณ์"]
+    ],
+    deliver:"ระบบคำนวณ RIASEC ฐานข้อมูล และเว็บไซต์เวอร์ชันที่ deploy แล้ว"
+  },
+  {
+    id:"c3", name:"สมาชิกคนที่ 3", role:"Content & Career Research",
+    tags:["I","S"], accent:"var(--s)",
+    blurb:"รีเสิร์ชและเขียนเนื้อหาอาชีพ สายการเรียน ให้ตรงกับแต่ละ Holland Code",
+    needs:["ทฤษฎี Holland RIASEC ฉบับเต็ม","ระบบสายการเรียนและคณะต่าง ๆ ในไทย","การเขียนเนื้อหาให้กระชับและเข้าใจง่ายสำหรับวัย ม.ต้น-ม.ปลาย"],
+    weeks:[
+      ["อ่านทฤษฎี Holland RIASEC ต้นฉบับให้เข้าใจลึก","ทำรายชื่ออาชีพ 30+ และสายเรียน 20+ ที่จะรีเสิร์ช"],
+      ["เขียนคำอธิบายอาชีพและสายเรียนให้ได้ครึ่งหนึ่ง (15 อาชีพ / 10 สาย)"],
+      ["เขียนอาชีพและสายเรียนที่เหลือให้ครบ 30 / 20"],
+      ["ตรวจทานความถูกต้องของเนื้อหาที่ใส่ในเว็บกับฝ่ายโลจิก"],
+      ["ปรับเนื้อหาตาม feedback ของกลุ่มทดสอบ (จุดที่อ่านแล้วงง)"],
+      ["ช่วยตรวจทานรายงานฉบับเต็มรอบสุดท้าย"]
+    ],
+    deliver:"เอกสารอาชีพ 30+ และสายเรียน 20+ พร้อม Holland Code ที่ตรงกัน"
+  },
+  {
+    id:"c4", name:"สมาชิกคนที่ 4", role:"Documentation & Report",
+    tags:["C","S"], accent:"var(--c)",
+    blurb:"เขียนรายงานโครงงานฉบับวิชาการ บทที่ 1-5 ให้ครบและถูกรูปแบบ",
+    needs:["รูปแบบการเขียนรายงานโครงงานวิชาการ (บทที่ 1-5)","การอ้างอิงและทำบรรณานุกรม","พื้นฐานสถิติง่าย ๆ (ค่าเฉลี่ย ร้อยละ) สำหรับสรุปผล"],
+    weeks:[
+      ["ร่างบทที่ 1 บทนำให้สมบูรณ์ (ที่มา / วัตถุประสงค์ / สมมติฐาน / ขอบเขต / ประโยชน์)"],
+      ["เขียนบทที่ 2 ทฤษฎี Holland RIASEC และงานวิจัยที่เกี่ยวข้อง (ฉบับร่าง)"],
+      ["เขียนบทที่ 3 วิธีดำเนินการ (ขั้นตอนพัฒนาเว็บและเครื่องมือที่ใช้)"],
+      ["รวมเนื้อหาบทที่ 1-3 เป็นฉบับสมบูรณ์ ตรวจการอ้างอิง/บรรณานุกรม"],
+      ["เขียนบทที่ 4 วิเคราะห์ผลแบบสอบถามความพึงพอใจ (ค่าเฉลี่ย/ร้อยละ)"],
+      ["เขียนบทที่ 5 สรุปอภิปรายผลและข้อเสนอแนะ","รวมรายงานฉบับสมบูรณ์"]
+    ],
+    deliver:"รายงานโครงงานฉบับสมบูรณ์ บทที่ 1-5"
+  },
+  {
+    id:"c5", name:"สมาชิกคนที่ 5", role:"Testing, Survey & Design",
+    tags:["E","S"], accent:"var(--e)",
+    blurb:"ดูแลการทดสอบกับผู้ใช้จริง เก็บแบบสอบถาม และทำงานดีไซน์/นำเสนอ",
+    needs:["การออกแบบ UI เบื้องต้นใน Figma/Canva","วิธีออกแบบแบบสอบถามความพึงพอใจ","การพูดนำเสนอหน้าชั้นและการทำสไลด์"],
+    weeks:[
+      ["ออกแบบแบบสอบถามความพึงพอใจสำหรับใช้ทดสอบ","เริ่มทำ mood board ดีไซน์ใน Canva/Figma"],
+      ["ทำ mockup หน้าจอใน Figma ส่งให้ฝ่าย Frontend อ้างอิง","รวบรวมรายชื่อกลุ่มตัวอย่างที่จะขอทดสอบ"],
+      ["ติดต่อขอความร่วมมือกลุ่มตัวอย่างให้ได้อย่างน้อย 30 คน"],
+      ["เริ่มให้กลุ่มตัวอย่างทดสอบเว็บไซต์จริงและเก็บแบบสอบถาม"],
+      ["รวบรวมและวิเคราะห์ผลแบบสอบถามทั้งหมด ส่งให้ฝ่ายเอกสาร"],
+      ["ทำสไลด์/โปสเตอร์นำเสนอ","ซ้อมพรีเซนต์ก่อนวันจริง"]
+    ],
+    deliver:"ผลสรุปแบบสอบถามความพึงพอใจ และสไลด์/โปสเตอร์นำเสนอ"
+  }
+];
+
+const POS = {R:[150,40],I:[245,95],A:[245,205],S:[150,260],E:[55,205],C:[55,95]};
+const FULL = {R:"Realistic",I:"Investigative",A:"Artistic",S:"Social",E:"Enterprising",C:"Conventional"};
+const HUE = {R:"var(--r)",I:"var(--i)",A:"var(--a)",S:"var(--s)",E:"var(--e)",C:"var(--c)"};
+
+let active = TEAM[0].id;
+
+function buildHexNodes(){
+  const g = document.getElementById('nodes');
+  let html = '';
+  Object.keys(POS).forEach(k=>{
+    const [x,y] = POS[k];
+    html += `<circle cx="${x}" cy="${y}" r="15" fill="var(--surface)" stroke="${HUE[k]}" stroke-width="2.5" class="node" data-key="${k}"/>`;
+    html += `<text x="${x}" y="${y+5}" text-anchor="middle" class="hex-label">${k}</text>`;
+  });
+  g.innerHTML = html;
+}
+
+function updateHex(person){
+  document.querySelectorAll('.node').forEach(n=>{
+    const k = n.getAttribute('data-key');
+    if(person.tags.includes(k)){ n.setAttribute('fill', HUE[k]); }
+    else { n.setAttribute('fill','var(--surface)'); }
+  });
+  const [x1,y1] = POS[person.tags[0]];
+  const [x2,y2] = POS[person.tags[1]];
+  const mx = (x1+x2)/2, my = (y1+y2)/2;
+  const dx = x2-x1, dy = y2-y1;
+  const cx = mx - dy*0.28, cy = my + dx*0.28;
+  const path = document.getElementById('connector');
+  path.setAttribute('d', `M${x1},${y1} Q${cx},${cy} ${x2},${y2}`);
+  path.setAttribute('stroke', person.accent);
+  path.setAttribute('opacity', '0.85');
+}
+
+function buildSwitcher(){
+  const sw = document.getElementById('switcher');
+  sw.innerHTML = TEAM.map(p=>`
+    <button class="p-card ${p.id===active?'active':''}" style="--accent:${p.accent}" data-id="${p.id}" role="tab" aria-selected="${p.id===active}">
+      <div class="avatar">${p.name.trim().slice(-1)}</div>
+      <span class="pname" contenteditable="true" spellcheck="false" data-id="${p.id}">${p.name}</span>
+      <span class="prole">${p.role}</span>
+      <div class="tagrow">${p.tags.map(t=>`<span class="tag" style="background:${HUE[t]}" title="${FULL[t]}">${t}</span>`).join('')}</div>
+    </button>
+  `).join('');
+
+  sw.querySelectorAll('.p-card').forEach(card=>{
+    card.addEventListener('click', (e)=>{
+      if(e.target.closest('.pname')) return;
+      selectPerson(card.getAttribute('data-id'));
+    });
+  });
+  sw.querySelectorAll('.pname').forEach(el=>{
+    el.addEventListener('blur', ()=>{
+      const id = el.getAttribute('data-id');
+      const p = TEAM.find(t=>t.id===id);
+      p.name = el.textContent.trim() || p.name;
+      el.textContent = p.name;
+      document.querySelectorAll(`[data-headname="${id}"]`).forEach(h=> h.textContent = p.name);
+      document.querySelector(`.p-card[data-id="${id}"] .avatar`).textContent = p.name.trim().slice(-1);
+    });
+    el.addEventListener('keydown', (e)=>{ if(e.key==='Enter'){ e.preventDefault(); el.blur(); } });
+  });
+}
+
+function buildPanels(){
+  const wrap = document.getElementById('panels');
+  wrap.innerHTML = TEAM.map(p=>`
+    <div class="panel ${p.id===active?'show':''}" id="panel-${p.id}" style="--accent:${p.accent}">
+      <div class="panel-head">
+        <div>
+          <h2 data-headname="${p.id}">${p.name}</h2>
+          <p class="blurb">${p.blurb}</p>
+        </div>
+        <div class="progress-box">
+          <span class="progress-num" id="prog-${p.id}">0/${p.weeks.flat().length}</span>
+          <div class="progress-track"><div class="progress-fill" id="fill-${p.id}"></div></div>
+        </div>
+      </div>
+      <div class="cols">
+        <div class="needs-box">
+          <h3>ต้องไปดู / เรียนรู้</h3>
+          <ul>${p.needs.map(n=>`<li>${n}</li>`).join('')}</ul>
+          <div class="deliver">
+            <h3>ส่งมอบสุดท้าย</h3>
+            <p>${p.deliver}</p>
+          </div>
+        </div>
+        <div class="weeks">
+          ${p.weeks.map((tasks,i)=>`
+            <div class="week-card">
+              <div class="week-head">
+                <span class="week-num">${i+1}</span>
+                <h4>${WEEKS[i]}</h4>
+              </div>
+              <ul>
+                ${tasks.map((t,ti)=>`
+                  <li data-pid="${p.id}" data-wi="${i}" data-ti="${ti}">
+                    <span class="check"><svg viewBox="0 0 12 12"><path d="M1 6l3.5 3.5L11 2" stroke="white" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+                    <span class="ttext">${t}</span>
+                  </li>
+                `).join('')}
+              </ul>
+            </div>
+          `).join('')}
+        </div>
+      </div>
+    </div>
+  `).join('');
+
+  wrap.querySelectorAll('.week-card li').forEach(li=>{
+    li.addEventListener('click', ()=>{
+      li.classList.toggle('done');
+      updateProgress(li.getAttribute('data-pid'));
+    });
+  });
+}
+
+function updateProgress(id){
+  const panel = document.getElementById(`panel-${id}`);
+  const items = panel.querySelectorAll('.week-card li');
+  const done = panel.querySelectorAll('.week-card li.done').length;
+  document.getElementById(`prog-${id}`).textContent = `${done}/${items.length}`;
+  document.getElementById(`fill-${id}`).style.width = `${(done/items.length)*100}%`;
+}
+
+function selectPerson(id){
+  active = id;
+  document.querySelectorAll('.p-card').forEach(c=> c.classList.toggle('active', c.getAttribute('data-id')===id));
+  document.querySelectorAll('.panel').forEach(p=> p.classList.toggle('show', p.id===`panel-${id}`));
+  updateHex(TEAM.find(p=>p.id===id));
+}
+
+function buildOverview(){
+  const body = document.getElementById('overview-body');
+  body.innerHTML = WEEKS.map((w,i)=>`
+    <div class="ov-week">
+      <h3><span class="week-num">${i+1}</span>${w}</h3>
+      <div class="ov-grid">
+        ${TEAM.map(p=>`
+          <div class="ov-cell" style="--accent:${p.accent}">
+            <span class="ov-name">${p.name}</span>
+            <ul>${p.weeks[i].map(t=>`<li>${t}</li>`).join('')}</ul>
+          </div>
+        `).join('')}
+      </div>
+    </div>
+  `).join('');
+}
+
+document.getElementById('btn-person').addEventListener('click', ()=>{
+  document.getElementById('btn-person').classList.add('active');
+  document.getElementById('btn-overview').classList.remove('active');
+  document.getElementById('person-view').style.display='block';
+  document.getElementById('overview').classList.remove('show');
+});
+document.getElementById('btn-overview').addEventListener('click', ()=>{
+  document.getElementById('btn-overview').classList.add('active');
+  document.getElementById('btn-person').classList.remove('active');
+  document.getElementById('person-view').style.display='none';
+  document.getElementById('overview').classList.add('show');
+});
+
+buildHexNodes();
+buildSwitcher();
+buildPanels();
+buildOverview();
+updateHex(TEAM[0]);
+</script>
+</body>
+</html>
